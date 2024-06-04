@@ -9,12 +9,46 @@
   --height: 32px;
 }
 
-body{
+body {
   color: #fefefe;
   background-color: #333;
+  padding: 12px 24px;
 }
 
-div{
-  display: inline-block;
-  padding: 1px 3px;
+.content {
+
+  .icons {
+    div {
+      display: inline-block;
+    }
+
+    .next {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+
+      .item-content {
+        .name{
+          white-space: nowrap;
+        }
+        .render{
+
+        }
+      }
+
+      &>div {
+        display: inline-block;
+      }
+    }
+  }
+
+  .item {
+    // border: 1px solid #fff;
+    padding: 5px;
+
+    .item {
+      border: none;
+    }
+  }
+
 }
