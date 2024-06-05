@@ -16,23 +16,27 @@ body {
 }
 
 .content {
+  .item-next {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  img {
+    max-width: 300px;
+  }
+
+
+  // .Province,
+  // .City {}
 
   .icons {
-    div {
-      display: inline-block;
-    }
+    width: 100%;
 
-    .next {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-
+    .item-next {
       .item-content {
-        .name{
+        .name {
           white-space: nowrap;
-        }
-        .render{
-
         }
       }
 
@@ -51,4 +55,7 @@ body {
     }
   }
 
+  .leaf {
+    cursor: pointer;
+  }
 }

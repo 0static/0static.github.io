@@ -1,76 +1,89 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import db from './toc.json'
-import { isArray, isEffectArray } from 'asura-eye'
 import './index.less'
-import { classNames } from 'harpe'
-import { RenderSvg } from './components'
-import { Tab, Button } from 'aurad'
+import { classNames, copyText } from 'harpe'
+import { Tab, Dialog, message } from 'aurad'
 import 'aurad/dist/style.css'
+import { ObjectType, toFirstUpperCase } from 'abandonjs'
+import { useLocalStorage } from '0hook'
+import { RenderItem } from './RenderItem'
+import { getInfo } from './util'
+const { tree } = db
 
-const RenderItem = (props: any) => {
-  const { name, path = '/', children } = props
-  const url = `https://cdn.jsdelivr.net/npm/0static${path.replace(/^\./, '')}`
-  // console.log(url)
-  const getDataType = () => {
-    if (/\.svg$/.test(name)) {
-      return 'svg'
-    }
-    return 'default'
-  }
-  const dataType = getDataType()
-  const hasNext = isEffectArray(children)
-  if (dataType === 'svg') {
-    console.log(url)
-  }
-  return (
-    <div className={classNames('item', dataType, name, { hasNext })}>
-      {name && (
-        <div
-          className='item-content'
-          onClick={() => {
-            console.log({ name, path })
-          }}>
-          {dataType === 'svg' ? (
-            <RenderSvg url={url} {...props} />
-          ) : (
-            <>
-              <span className='name'>
-                {name.replace(/\.(json|svg|css|js|png|jpeg|ico)$/, '')}
-              </span>
-              <span className='render'>
-                {/* {dataType === 'svg' && <RenderSvg url={url} {...props} />} */}
-              </span>
-            </>
-          )}
-        </div>
-      )}
-      {hasNext && (
-        <div className='next'>
-          {children.map((item: any, i: number) => {
-            return <RenderItem key={i} {...item} />
-          })}
-        </div>
-      )}
-    </div>
-  )
-}
+const url = `https://cdn.jsdelivr.net/npm/0static`
 
 function App() {
-  console.log(db)
+  const [tab, setTab] = useLocalStorage('tab-key', tree[0][0])
+
+  const [state, setState] = React.useState<{
+    open: boolean
+    model: ObjectType<string>
+  }>({
+    open: false,
+    model: {}
+  })
+  const onSelect = (model: ObjectType<string>) => {
+    console.log(model)
+    setState({
+      open: true,
+      model
+    })
+  }
   return (
     <div className='app'>
       <div className='content'>
         <Tab
+          value={tab || undefined}
+          onChange={setTab}
           items={db.tree.map((item: any, i: number) => {
+            const { name = '', children } = getInfo(item)
             return {
-              title: item.name,
-              key: item.name,
-              children: <RenderItem key={i} {...item} />
+              title: toFirstUpperCase(name as string),
+              key: name,
+              children: (
+                <RenderItem
+                  onSelect={onSelect}
+                  key={i}
+                  name={name}
+                  children={children}
+                  url={url + '/' + name}
+                />
+              )
             }
           })}
         />
       </div>
+      <Dialog
+        open={state.open}
+        maskClosable
+        hiddenCancel
+        onCancel={() => {
+          setState({ open: false, model: {} })
+        }}>
+        <div style={{ color: '#555' }}>
+          {['name', 'url', 'content'].map((name) => {
+            const value = state.model[name] || ''
+            return (
+              <div
+                key={name}
+                className={classNames(name)}
+                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                  const status = copyText(value)
+                  if (status) {
+                    message('success', '复制成功')
+                  } else {
+                    message('error', '复制失败')
+                  }
+                  // console.log(status)
+                }}>
+                {value}
+              </div>
+            )
+          })}
+        </div>
+      </Dialog>
     </div>
   )
 }
