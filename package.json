@@ -50,7 +50,7 @@
     "abandonjs": "^3.7.1",
     "animejs": "^3.2.2",
     "asura-eye": "^0.8.0",
-    "aurad": "workspace:1.3.0",
+    "aurad": "^1.6.3",
     "axios": "^1.5.1",
     "babel-loader": "^8.3.0",
     "clean-webpack-plugin": "^4.0.0",

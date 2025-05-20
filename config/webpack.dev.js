@@ -8,11 +8,12 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const devServer = {
-  port: '6900',
+  port: '6940',
   // client: { logging: "error" },//浏览器中设置日志级别
-  compress: true, //是否启用 gzip 压缩
+  compress: false, //是否启用 gzip 压缩
   open: false,
-  hot: true,
+  hot: false,
+  liveReload: true,
   // https: true,
   historyApiFallback: true,
   watchFiles: ['src/**/*', 'public/**/*'],

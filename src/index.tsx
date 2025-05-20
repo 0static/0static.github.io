@@ -21,13 +21,13 @@ function App() {
     model: ObjectType<string>
   }>({
     open: false,
-    model: {}
+    model: {},
   })
   const onSelect = (model: ObjectType<string>) => {
     console.log(model)
     setState({
       open: true,
-      model
+      model,
     })
   }
   return (
@@ -49,7 +49,7 @@ function App() {
                   children={children}
                   url={url + '/' + name}
                 />
-              )
+              ),
             }
           })}
         />
@@ -57,30 +57,31 @@ function App() {
       <Dialog
         open={state.open}
         maskClosable
-        hiddenCancel
+        // hiddenCancel
         onCancel={() => {
           setState({ open: false, model: {} })
         }}>
-        <div style={{ color: '#555' }}>
+        <div className='dialog-content' style={{ color: '#555' }}>
           {['name', 'url', 'content'].map((name) => {
             const value = state.model[name] || ''
-            return (
-              <div
-                key={name}
-                className={classNames(name)}
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  const status = copyText(value)
-                  if (status) {
-                    message('success', '复制成功')
-                  } else {
-                    message('error', '复制失败')
-                  }
-                  // console.log(status)
-                }}>
-                {value}
-              </div>
-            )
+            if (value)
+              return (
+                <div
+                  key={name}
+                  className={classNames('dialog-row', name)}
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => {
+                    const status = copyText(value)
+                    if (status) {
+                      message.success('复制成功')
+                    } else {
+                      message.error('复制失败')
+                    }
+                    // console.log(status)
+                  }}>
+                  {value}
+                </div>
+              )
           })}
         </div>
       </Dialog>
